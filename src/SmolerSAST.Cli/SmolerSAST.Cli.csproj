@@ -15,6 +15,7 @@
     <PackageReference Include="System.CommandLine" />
     <ProjectReference Include="..\SmolerSAST.Core\SmolerSAST.Core.csproj" />
     <ProjectReference Include="..\SmolerSAST.Rules.Base\SmolerSAST.Rules.Base.csproj" />
+    <ProjectReference Include="..\SmolerSAST.Rules.BR\SmolerSAST.Rules.BR.csproj" />
     <ProjectReference Include="..\SmolerSAST.Reporting\SmolerSAST.Reporting.csproj" />
   </ItemGroup>
 </Project>

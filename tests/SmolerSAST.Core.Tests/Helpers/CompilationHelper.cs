@@ -60,6 +60,12 @@ internal static class CompilationHelper
             "System.Console.dll",
             "System.Runtime.Serialization.Formatters.dll",
             "System.Text.Json.dll",
+            "System.Security.Cryptography.dll",
+            "System.Security.Cryptography.Algorithms.dll",
+            "System.Security.Cryptography.Primitives.dll",
+            "System.Security.Cryptography.Csp.dll",
+            "System.Net.Primitives.dll",
+            "System.Net.Security.dll",
             "netstandard.dll",
         };
 
