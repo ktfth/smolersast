@@ -1,14 +1,15 @@
-## .NET
+## .NET build output
 bin/
 obj/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-*.DotSettings.user
+*.dll
+*.exe
+*.pdb
+*.cache
 
 ## NuGet
 *.nupkg
+*.snupkg
+nupkgs/
 **/[Pp]ackages/*
 !**/[Pp]ackages/build/
 
@@ -17,17 +18,40 @@ obj/
 [Rr]elease/
 x64/
 x86/
+publish/
+BenchmarkDotNet.Artifacts/
 
-## IDE
+## User/IDE files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
 .vs/
 .vscode/
 .idea/
 *.swp
 *~
+launchSettings.json
 
-## Test results (keep phase1 evidence)
+## OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+## Test results and coverage
 **/TestResults/
+**/coverage/
+*.trx
+coverage.cobertura.xml
 
-## Coverage (keep phase1 evidence)
-phase1/coverage/
-nupkgs/
+## Scan output (generated, not source)
+scan.sarif
+scan-results.sarif
+banking-scan.sarif
+
+## Secrets / keys
+*.pfx
+*.snk
+appsettings.*.json
+!appsettings.json
