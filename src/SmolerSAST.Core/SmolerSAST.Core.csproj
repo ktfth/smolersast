@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmolerSAST.Core</RootNamespace>
+    <Description>SmolerSAST analysis engine — Roslyn-based compilation acquisition, symbol indexing, rule framework, and analysis pipeline.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+    <PackageReference Include="Microsoft.Build.Locator" />
+    <PackageReference Include="ICSharpCode.Decompiler" />
+    <PackageReference Include="LiteDB" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+</Project>

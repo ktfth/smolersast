@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="c9d76d53-306f-4ff8-8d65-962713a9ec96" name="Usuario@T-REX 2026-05-18 16:16:30" runUser="T-REX\Usuario" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-05-18T16:16:30.6327445-03:00" queuing="2026-05-18T16:16:30.6327449-03:00" start="2026-05-18T16:16:17.5646659-03:00" finish="2026-05-18T16:16:35.5922690-03:00" />
+  <TestSettings name="default" id="a73b2503-966c-41eb-bf68-abb74206a3f1">
+    <Deployment runDeploymentRoot="Usuario_T-REX_2026-05-18_16_16_30" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="6ad12cbb-9075-4d7e-afdc-4593d3924a74" testId="c9a48054-bd9c-96e0-c2b8-afc20b7db688" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive4_HelperMethod_Detected" computerName="T-REX" duration="00:00:00.8389363" startTime="2026-05-18T16:16:32.9742894-03:00" endTime="2026-05-18T16:16:32.9742899-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6ad12cbb-9075-4d7e-afdc-4593d3924a74" />
+    <UnitTestResult executionId="1cb2669a-5dcd-4739-9844-f55482470142" testId="10a7bafa-bc8d-5955-5c21-64d54371ce68" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive3_TypeOfBinaryFormatter_Detected" computerName="T-REX" duration="00:00:00.7151050" startTime="2026-05-18T16:16:33.6915618-03:00" endTime="2026-05-18T16:16:33.6915625-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1cb2669a-5dcd-4739-9844-f55482470142" />
+    <UnitTestResult executionId="b40a43af-d78c-41ea-a8dc-f447252f44ae" testId="645f769e-80bc-1003-fe2d-70b146d6dd05" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive5_WithSurrogateSelector_StillDetected" computerName="T-REX" duration="00:00:00.6925742" startTime="2026-05-18T16:16:32.1331232-03:00" endTime="2026-05-18T16:16:32.1331238-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b40a43af-d78c-41ea-a8dc-f447252f44ae" />
+    <UnitTestResult executionId="3934b69d-d136-4348-b36f-c2d4a9f6f47e" testId="aca5e9ad-3ce2-785a-b7d1-fb384a450368" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive2_IndirectUsage_Detected" computerName="T-REX" duration="00:00:00.8724106" startTime="2026-05-18T16:16:31.4396209-03:00" endTime="2026-05-18T16:16:31.4396214-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3934b69d-d136-4348-b36f-c2d4a9f6f47e" />
+    <UnitTestResult executionId="bce480ea-4e37-4354-bfaf-fc0bed6f73cd" testId="b4ca33dc-7c0e-1238-6bee-0f8da739df9a" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive1_DirectInstantiation_Detected" computerName="T-REX" duration="00:00:00.5529160" startTime="2026-05-18T16:16:34.9493004-03:00" endTime="2026-05-18T16:16:34.9493011-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bce480ea-4e37-4354-bfaf-fc0bed6f73cd" />
+    <UnitTestResult executionId="a1c4df97-1185-4ccc-93d3-804368d0419e" testId="d9393e50-f749-b4f5-e574-846b0edfcf6c" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Negative3_CommentMention_NotDetected" computerName="T-REX" duration="00:00:00.4314493" startTime="2026-05-18T16:16:35.3820285-03:00" endTime="2026-05-18T16:16:35.3820290-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a1c4df97-1185-4ccc-93d3-804368d0419e" />
+    <UnitTestResult executionId="4c977bb3-39dc-4c17-8d1c-2b065735f493" testId="52535941-075a-9219-bf1b-3734b5d3eaa4" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Negative2_UserDefinedBinaryFormatter_NotDetected" computerName="T-REX" duration="00:00:00.6910653" startTime="2026-05-18T16:16:34.3950626-03:00" endTime="2026-05-18T16:16:34.3950631-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4c977bb3-39dc-4c17-8d1c-2b065735f493" />
+    <UnitTestResult executionId="126f0c60-af19-4eec-af69-f0877b8fdff3" testId="bdfd31dc-0aa1-60ff-e1ba-75cd20578517" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Negative1_JsonSerializer_NotDetected" computerName="T-REX" duration="00:00:10.7648941" startTime="2026-05-18T16:16:30.5628452-03:00" endTime="2026-05-18T16:16:30.5628963-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="126f0c60-af19-4eec-af69-f0877b8fdff3" />
+    <UnitTestResult executionId="e6cf3f8b-cb87-42e8-a8e9-59b2d75d1748" testId="e5440a9b-de39-42d9-f215-f187cbb0765c" testName="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.RuleMetadata_IsCorrect" computerName="T-REX" duration="00:00:00.0334385" startTime="2026-05-18T16:16:35.4166241-03:00" endTime="2026-05-18T16:16:35.4166246-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6cf3f8b-cb87-42e8-a8e9-59b2d75d1748" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Negative3_CommentMention_NotDetected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="d9393e50-f749-b4f5-e574-846b0edfcf6c">
+      <Execution id="a1c4df97-1185-4ccc-93d3-804368d0419e" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Negative3_CommentMention_NotDetected" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive3_TypeOfBinaryFormatter_Detected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="10a7bafa-bc8d-5955-5c21-64d54371ce68">
+      <Execution id="1cb2669a-5dcd-4739-9844-f55482470142" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Positive3_TypeOfBinaryFormatter_Detected" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive4_HelperMethod_Detected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="c9a48054-bd9c-96e0-c2b8-afc20b7db688">
+      <Execution id="6ad12cbb-9075-4d7e-afdc-4593d3924a74" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Positive4_HelperMethod_Detected" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Negative1_JsonSerializer_NotDetected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="bdfd31dc-0aa1-60ff-e1ba-75cd20578517">
+      <Execution id="126f0c60-af19-4eec-af69-f0877b8fdff3" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Negative1_JsonSerializer_NotDetected" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive1_DirectInstantiation_Detected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="b4ca33dc-7c0e-1238-6bee-0f8da739df9a">
+      <Execution id="bce480ea-4e37-4354-bfaf-fc0bed6f73cd" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Positive1_DirectInstantiation_Detected" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive5_WithSurrogateSelector_StillDetected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="645f769e-80bc-1003-fe2d-70b146d6dd05">
+      <Execution id="b40a43af-d78c-41ea-a8dc-f447252f44ae" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Positive5_WithSurrogateSelector_StillDetected" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Negative2_UserDefinedBinaryFormatter_NotDetected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="52535941-075a-9219-bf1b-3734b5d3eaa4">
+      <Execution id="4c977bb3-39dc-4c17-8d1c-2b065735f493" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Negative2_UserDefinedBinaryFormatter_NotDetected" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.RuleMetadata_IsCorrect" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="e5440a9b-de39-42d9-f215-f187cbb0765c">
+      <Execution id="e6cf3f8b-cb87-42e8-a8e9-59b2d75d1748" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="RuleMetadata_IsCorrect" />
+    </UnitTest>
+    <UnitTest name="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests.Positive2_IndirectUsage_Detected" storage="c:\users\usuario\war\smoler-sast\tests\smolersast.rules.base.tests\bin\release\net9.0\smolersast.rules.base.tests.dll" id="aca5e9ad-3ce2-785a-b7d1-fb384a450368">
+      <Execution id="3934b69d-d136-4348-b36f-c2d4a9f6f47e" />
+      <TestMethod codeBase="C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="SmolerSAST.Rules.Base.Tests.Deserialization.BinaryFormatterUsageRuleTests" name="Positive2_IndirectUsage_Detected" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="c9a48054-bd9c-96e0-c2b8-afc20b7db688" executionId="6ad12cbb-9075-4d7e-afdc-4593d3924a74" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="10a7bafa-bc8d-5955-5c21-64d54371ce68" executionId="1cb2669a-5dcd-4739-9844-f55482470142" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="645f769e-80bc-1003-fe2d-70b146d6dd05" executionId="b40a43af-d78c-41ea-a8dc-f447252f44ae" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="aca5e9ad-3ce2-785a-b7d1-fb384a450368" executionId="3934b69d-d136-4348-b36f-c2d4a9f6f47e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b4ca33dc-7c0e-1238-6bee-0f8da739df9a" executionId="bce480ea-4e37-4354-bfaf-fc0bed6f73cd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d9393e50-f749-b4f5-e574-846b0edfcf6c" executionId="a1c4df97-1185-4ccc-93d3-804368d0419e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="52535941-075a-9219-bf1b-3734b5d3eaa4" executionId="4c977bb3-39dc-4c17-8d1c-2b065735f493" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bdfd31dc-0aa1-60ff-e1ba-75cd20578517" executionId="126f0c60-af19-4eec-af69-f0877b8fdff3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e5440a9b-de39-42d9-f215-f187cbb0765c" executionId="e6cf3f8b-cb87-42e8-a8e9-59b2d75d1748" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados que não estão em uma lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos os resultados carregados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="9" executed="9" passed="9" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.12)&#xD;
+[xUnit.net 00:00:00.26]   Discovering: SmolerSAST.Rules.Base.Tests&#xD;
+[xUnit.net 00:00:00.36]   Discovered:  SmolerSAST.Rules.Base.Tests&#xD;
+[xUnit.net 00:00:00.37]   Starting:    SmolerSAST.Rules.Base.Tests&#xD;
+[xUnit.net 00:00:16.15]   Finished:    SmolerSAST.Rules.Base.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

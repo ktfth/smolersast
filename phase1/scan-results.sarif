@@ -1,0 +1,196 @@
+{
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SmolerSAST",
+          "version": "0.1.0",
+          "semanticVersion": "0.1.0",
+          "informationUri": "https://github.com/smolersast/smolersast",
+          "rules": [
+            {
+              "id": "SMOL0009",
+              "name": "SMOL0009",
+              "shortDescription": {
+                "text": "BinaryFormatter usage detected. BinaryFormatter is inherently insecure and cannot be made safe. Any deserialized data can execute arbitrary code regardless of applied validations."
+              },
+              "fullDescription": {
+                "text": "Uso de BinaryFormatter detectado. BinaryFormatter \u00E9 inerentemente inseguro e n\u00E3o pode ser tornado seguro. Qualquer dado deserializado pode executar c\u00F3digo arbitr\u00E1rio, independente de valida\u00E7\u00F5es aplicadas."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "precision": "High",
+                "tags": [
+                  "deserialization",
+                  "binary-formatter"
+                ],
+                "cwe": [
+                  "CWE-502"
+                ],
+                "owasp": "A08:2021"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "SMOL0009",
+          "level": "error",
+          "message": {
+            "text": "BinaryFormatter instantiation detected."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Source1.cs"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 25,
+                  "endLine": 12,
+                  "endColumn": 46,
+                  "snippet": {
+                    "text": "new BinaryFormatter()"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "confidence": 1,
+            "messagePtBr": "Instancia\u00E7\u00E3o de BinaryFormatter detectada."
+          }
+        },
+        {
+          "ruleId": "SMOL0009",
+          "level": "error",
+          "message": {
+            "text": "BinaryFormatter.Deserialize() call detected."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Source1.cs"
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 16,
+                  "endLine": 13,
+                  "endColumn": 45,
+                  "snippet": {
+                    "text": "formatter.Deserialize(stream)"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "confidence": 1,
+            "messagePtBr": "Chamada a BinaryFormatter.Deserialize() detectada."
+          }
+        },
+        {
+          "ruleId": "SMOL0009",
+          "level": "error",
+          "message": {
+            "text": "BinaryFormatter instantiation detected."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Source1.cs"
+                },
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 30,
+                  "endLine": 19,
+                  "endColumn": 35,
+                  "snippet": {
+                    "text": "new()"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "confidence": 1,
+            "messagePtBr": "Instancia\u00E7\u00E3o de BinaryFormatter detectada."
+          }
+        },
+        {
+          "ruleId": "SMOL0009",
+          "level": "error",
+          "message": {
+            "text": "BinaryFormatter.Serialize() call detected."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Source1.cs"
+                },
+                "region": {
+                  "startLine": 20,
+                  "startColumn": 9,
+                  "endLine": 20,
+                  "endColumn": 35,
+                  "snippet": {
+                    "text": "bf.Serialize(stream, data)"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "confidence": 1,
+            "messagePtBr": "Chamada a BinaryFormatter.Serialize() detectada."
+          }
+        },
+        {
+          "ruleId": "SMOL0009",
+          "level": "error",
+          "message": {
+            "text": "typeof(BinaryFormatter) reference detected \u2014 possible reflection-based usage."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Source1.cs"
+                },
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 16,
+                  "endLine": 26,
+                  "endColumn": 39,
+                  "snippet": {
+                    "text": "typeof(BinaryFormatter)"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "confidence": 1,
+            "messagePtBr": "Refer\u00EAncia a typeof(BinaryFormatter) detectada \u2014 poss\u00EDvel uso via reflection."
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "startTimeUtc": "2025-01-01T00:00:00.0000000Z",
+          "endTimeUtc": "2025-01-01T00:00:07.9344906Z",
+          "executionSuccessful": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+  Determinando os projetos a serem restaurados...
+  Todos os projetos estão atualizados para restauração.
+  SmolerSAST.Analyzer -> C:\Users\Usuario\war\smoler-sast\src\SmolerSAST.Analyzer\bin\Release\netstandard2.0\SmolerSAST.Analyzer.dll
+  SmolerSAST.Core -> C:\Users\Usuario\war\smoler-sast\src\SmolerSAST.Core\bin\Release\net9.0\SmolerSAST.Core.dll
+  SmolerSAST.Reporting -> C:\Users\Usuario\war\smoler-sast\src\SmolerSAST.Reporting\bin\Release\net9.0\SmolerSAST.Reporting.dll
+  SmolerSAST.Semantic -> C:\Users\Usuario\war\smoler-sast\src\SmolerSAST.Semantic\bin\Release\net9.0\SmolerSAST.Semantic.dll
+  SmolerSAST.Rules.BR -> C:\Users\Usuario\war\smoler-sast\src\SmolerSAST.Rules.BR\bin\Release\net9.0\SmolerSAST.Rules.BR.dll
+  SmolerSAST.Rules.Base -> C:\Users\Usuario\war\smoler-sast\src\SmolerSAST.Rules.Base\bin\Release\net9.0\SmolerSAST.Rules.Base.dll
+  SmolerSAST.Core.Tests -> C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Core.Tests\bin\Release\net9.0\SmolerSAST.Core.Tests.dll
+  SmolerSAST.Rules.Base.Tests -> C:\Users\Usuario\war\smoler-sast\tests\SmolerSAST.Rules.Base.Tests\bin\Release\net9.0\SmolerSAST.Rules.Base.Tests.dll
+  SmolerSAST.Cli -> C:\Users\Usuario\war\smoler-sast\src\SmolerSAST.Cli\bin\Release\net9.0\SmolerSAST.Cli.dll
+
+Compilação com êxito.
+    0 Aviso(s)
+    0 Erro(s)
+
+Tempo Decorrido 00:00:05.59

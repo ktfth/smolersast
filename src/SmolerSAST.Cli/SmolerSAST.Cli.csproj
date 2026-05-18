@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SmolerSAST.Cli</RootNamespace>
+    <Description>SmolerSAST CLI — scan, rules, verify, report commands. NativeAOT-compatible.</Description>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" />
+    <ProjectReference Include="..\SmolerSAST.Core\SmolerSAST.Core.csproj" />
+    <ProjectReference Include="..\SmolerSAST.Rules.Base\SmolerSAST.Rules.Base.csproj" />
+    <ProjectReference Include="..\SmolerSAST.Reporting\SmolerSAST.Reporting.csproj" />
+  </ItemGroup>
+</Project>
