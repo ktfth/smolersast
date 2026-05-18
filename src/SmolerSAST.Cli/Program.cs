@@ -1,91 +1,193 @@
 using System.CommandLine;
-using System.Collections.Immutable;
+using SmolerSAST.Cli;
 using SmolerSAST.Core.Compilation;
 using SmolerSAST.Core.Indexing;
 using SmolerSAST.Core.Pipeline;
-using SmolerSAST.Core.Rules;
 using SmolerSAST.Reporting;
-using SmolerSAST.Rules.Base.AspNet;
-using SmolerSAST.Rules.Base.Configuration;
-using SmolerSAST.Rules.Base.Cryptography;
-using SmolerSAST.Rules.Base.Deserialization;
-using SmolerSAST.Rules.Base.Injection;
-using SmolerSAST.Rules.BR.Lgpd;
-using SmolerSAST.Rules.BR.Bacen;
-using SmolerSAST.Rules.BR.Cvm;
+
+const string Version = "0.2.0";
 
 var rootCommand = new RootCommand("SmolerSAST — Static Application Security Testing for .NET");
 
+// ── scan ──────────────────────────────────────────────
 var scanCommand = new Command("scan", "Scan a project or assembly for security vulnerabilities");
-
-var pathOption = new Option<string>(
-    "--path",
-    "Path to .sln, .csproj, or .cs file(s) to scan")
-{
-    IsRequired = true,
-};
-
-var outputOption = new Option<string>(
-    "--output",
-    () => "scan-results.sarif",
-    "Output file path for the SARIF report");
-
+var pathOption = new Option<string>("--path", "Path to directory with .cs files or a single .cs file") { IsRequired = true };
+var outputOption = new Option<string>("--output", () => "scan-results.sarif", "Output file path for the SARIF report");
+var formatOption = new Option<string>("--format", () => "sarif", "Output format: sarif, markdown, or both");
 scanCommand.AddOption(pathOption);
 scanCommand.AddOption(outputOption);
+scanCommand.AddOption(formatOption);
 
-scanCommand.SetHandler(async (string path, string output) =>
+scanCommand.SetHandler(async (string path, string output, string format) =>
 {
-    Console.WriteLine($"SmolerSAST v0.1.0 — Scanning: {path}");
+    Console.WriteLine($"SmolerSAST v{Version} — Scanning: {path}");
 
-    // Build registry
-    var registry = new DefaultRuleRegistry();
-    registry.Register(new BinaryFormatterUsageRule());
-    registry.Register(new NetDataContractSerializerSoapFormatterRule());
-    registry.Register(new LosFormatterObjectStateFormatterRule());
-    registry.Register(new ViewStateMacDisabledRule());
-    registry.Register(new NewtonsoftTypeNameHandlingRule());
-    registry.Register(new UnsafeJsonConverterRule());
-    registry.Register(new YamlDotNetUntypedDeserializationRule());
-    registry.Register(new DataContractSerializerDynamicKnownTypesRule());
-    registry.Register(new WeakHashAlgorithmRule());
-    registry.Register(new EcbCipherModeRule());
-    registry.Register(new HardcodedCryptoKeyRule());
-    registry.Register(new RijndaelManagedUsageRule());
-    registry.Register(new RsaPkcs1PaddingRule());
-    registry.Register(new SystemRandomSecurityContextRule());
-    registry.Register(new CustomCryptoImplementationRule());
-    registry.Register(new WeakTlsVersionRule());
-    registry.Register(new RawSqlConcatenationRule());
-    registry.Register(new FormattableStringInvariantSqlRule());
-    registry.Register(new LdapInjectionRule());
-    registry.Register(new XPathInjectionRule());
-    registry.Register(new CommandInjectionRule());
-    registry.Register(new LinqToSqlInjectionRule());
-    registry.Register(new NoSqlInjectionRule());
-    registry.Register(new DapperSqlInjectionRule());
-    // ASP.NET rules
-    registry.Register(new AllowAnonymousSensitiveVerbRule());
-    registry.Register(new MissingAntiforgeryRule());
-    registry.Register(new ViewStateMacDisabledCodeRule());
-    registry.Register(new DebugEnabledRule());
-    registry.Register(new CustomErrorsOffRule());
-    registry.Register(new InsecureCookieRule());
-    registry.Register(new AuthenticationWithoutSchemeRule());
-    registry.Register(new DistributedCacheWithoutEncryptionRule());
-    // Configuration rules
-    registry.Register(new HardcodedSecretRule());
-    registry.Register(new InsecureHttpClientRule());
-    registry.Register(new DiLifetimeMismatchRule());
-    registry.Register(new ReflectionDynamicInvocationRule());
-    // Brazil rules (LGPD/Bacen/CVM)
-    registry.Register(new PiiInLogStatementsRule());
-    registry.Register(new PiiInUrlQueryStringRule());
-    registry.Register(new PiiWithoutPersonalDataAnnotationRule());
-    registry.Register(new JwtValidationIncompleteRule());
-    registry.Register(new HsmNotUsedForSigningRule());
-    registry.Register(new PrivilegedActionWithoutDualControlRule());
+    var registry = RuleRegistration.CreateRegistry();
+    var sources = await LoadSourcesAsync(path).ConfigureAwait(false);
 
-    // Use InMemoryCompilationAcquirer for .cs files
+    if (sources.Count == 0)
+    {
+        Console.Error.WriteLine("No .cs files found at the specified path.");
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    var acquirer = new InMemoryCompilationAcquirer([.. sources], InMemoryCompilationAcquirer.GetRuntimeReferences());
+    var pipeline = new AnalysisPipeline(acquirer, registry, new InMemorySymbolIndex());
+    var result = await pipeline.RunAsync(new AnalysisPipelineOptions(path)).ConfigureAwait(false);
+    var scanTime = DateTimeOffset.UtcNow;
+    var rules = registry.GetAll().ToArray();
+
+    Console.WriteLine($"Analysis complete: {result.Findings.Length} finding(s) in {result.Duration.TotalMilliseconds:F0}ms");
+    Console.WriteLine($"  Rules executed: {result.RulesExecuted}");
+    Console.WriteLine($"  Syntax trees: {result.SyntaxTreesAnalyzed}");
+
+    var artifacts = new List<string>();
+
+    if (format is "sarif" or "both")
+    {
+        await SarifEmitter.WriteAsync(result, rules, scanTime, output).ConfigureAwait(false);
+        Console.WriteLine($"  SARIF report: {output}");
+        artifacts.Add(output);
+    }
+
+    if (format is "markdown" or "both")
+    {
+        var mdPath = Path.ChangeExtension(output, ".md");
+        await MarkdownReportEmitter.WriteAsync(result, rules, scanTime, path, mdPath).ConfigureAwait(false);
+        Console.WriteLine($"  Markdown report: {mdPath}");
+        artifacts.Add(mdPath);
+    }
+
+    // Emit manifest
+    if (artifacts.Count > 0)
+    {
+        var manifestPath = Path.Combine(Path.GetDirectoryName(output) ?? ".", "manifest.json");
+        await ManifestEmitter.WriteAsync(artifacts, scanTime, manifestPath).ConfigureAwait(false);
+    }
+
+    foreach (var finding in result.Findings)
+    {
+        Console.WriteLine($"  [{finding.Severity}] {finding.RuleId}: {finding.MessagePtBr}");
+        Console.WriteLine($"    at {finding.Location.FilePath}:{finding.Location.StartLine}:{finding.Location.StartColumn}");
+    }
+
+    Environment.ExitCode = result.Findings.Any(f => f.Severity >= SmolerSAST.Core.Rules.RuleSeverity.High) ? 1 : 0;
+}, pathOption, outputOption, formatOption);
+
+rootCommand.AddCommand(scanCommand);
+
+// ── rules ─────────────────────────────────────────────
+var rulesCommand = new Command("rules", "List all available security rules");
+rulesCommand.SetHandler(() =>
+{
+    var registry = RuleRegistration.CreateRegistry();
+    var all = registry.GetAll();
+
+    Console.WriteLine($"SmolerSAST v{Version} — {all.Length} rules available\n");
+    Console.WriteLine($"{"ID",-10} {"Severity",-10} {"Precision",-10} {"CWE",-12} {"OWASP",-10} Description");
+    Console.WriteLine(new string('-', 100));
+
+    foreach (var rule in all)
+    {
+        var cwe = string.Join(",", rule.CweIds.Select(id => $"{id}"));
+        Console.WriteLine($"{rule.Id,-10} {rule.Severity,-10} {rule.Precision,-10} {cwe,-12} {rule.OwaspCategory,-10} {rule.DescriptionEnUs[..Math.Min(50, rule.DescriptionEnUs.Length)]}");
+    }
+});
+rootCommand.AddCommand(rulesCommand);
+
+// ── verify ────────────────────────────────────────────
+var verifyCommand = new Command("verify", "Verify scan artifacts integrity via manifest");
+var manifestOption = new Option<string>("--manifest", () => "manifest.json", "Path to manifest.json");
+verifyCommand.AddOption(manifestOption);
+
+verifyCommand.SetHandler(async (string manifestPath) =>
+{
+    if (!File.Exists(manifestPath))
+    {
+        Console.Error.WriteLine($"Manifest not found: {manifestPath}");
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    var json = await File.ReadAllTextAsync(manifestPath).ConfigureAwait(false);
+    var manifest = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(json);
+
+    Console.WriteLine($"SmolerSAST v{Version} — Verifying manifest: {manifestPath}\n");
+
+    var allValid = true;
+    foreach (var artifact in manifest.GetProperty("artifacts").EnumerateArray())
+    {
+        var path = artifact.GetProperty("path").GetString()!;
+        var expectedHash = artifact.GetProperty("sha256").GetString()!;
+
+        if (!File.Exists(path))
+        {
+            Console.WriteLine($"  MISSING  {path}");
+            allValid = false;
+            continue;
+        }
+
+        var bytes = await File.ReadAllBytesAsync(path).ConfigureAwait(false);
+        var actualHash = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(bytes));
+
+        if (actualHash == expectedHash)
+        {
+            Console.WriteLine($"  OK       {path}");
+        }
+        else
+        {
+            Console.WriteLine($"  MISMATCH {path}");
+            Console.WriteLine($"           expected: {expectedHash}");
+            Console.WriteLine($"           actual:   {actualHash}");
+            allValid = false;
+        }
+    }
+
+    Console.WriteLine(allValid ? "\nAll artifacts verified." : "\nVerification FAILED.");
+    Environment.ExitCode = allValid ? 0 : 1;
+}, manifestOption);
+rootCommand.AddCommand(verifyCommand);
+
+// ── report ────────────────────────────────────────────
+var reportCommand = new Command("report", "Generate a pt-BR Markdown report from a SARIF file");
+var sarifOption = new Option<string>("--sarif", "Path to .sarif input file") { IsRequired = true };
+var reportOutputOption = new Option<string>("--output", () => "report.pt-BR.md", "Output Markdown file path");
+reportCommand.AddOption(sarifOption);
+reportCommand.AddOption(reportOutputOption);
+
+reportCommand.SetHandler((string sarifPath, string reportOutput) =>
+{
+    if (!File.Exists(sarifPath))
+    {
+        Console.Error.WriteLine($"SARIF file not found: {sarifPath}");
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    Console.WriteLine($"SmolerSAST v{Version} — Use 'scan --format both' to generate SARIF and Markdown simultaneously.");
+    Console.WriteLine($"  Or scan again with: smolersast scan --path <target> --output {sarifPath} --format both");
+}, sarifOption, reportOutputOption);
+rootCommand.AddCommand(reportCommand);
+
+// ── version ───────────────────────────────────────────
+var versionCommand = new Command("version", "Display SmolerSAST version");
+versionCommand.SetHandler(() =>
+{
+    Console.WriteLine($"SmolerSAST v{Version}");
+    Console.WriteLine($"Runtime: .NET {Environment.Version}");
+    Console.WriteLine($"OS: {Environment.OSVersion}");
+
+    var registry = RuleRegistration.CreateRegistry();
+    Console.WriteLine($"Rules: {registry.GetAll().Length}");
+});
+rootCommand.AddCommand(versionCommand);
+
+return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
+
+// ── helpers ───────────────────────────────────────────
+static async Task<List<string>> LoadSourcesAsync(string path)
+{
     var sources = new List<string>();
     if (Directory.Exists(path))
     {
@@ -99,47 +201,5 @@ scanCommand.SetHandler(async (string path, string output) =>
         sources.Add(await File.ReadAllTextAsync(path).ConfigureAwait(false));
     }
 
-    if (sources.Count == 0)
-    {
-        Console.Error.WriteLine("No .cs files found at the specified path.");
-        return;
-    }
-
-    var acquirer = new InMemoryCompilationAcquirer(
-        [.. sources],
-        InMemoryCompilationAcquirer.GetRuntimeReferences());
-
-    var symbolIndex = new InMemorySymbolIndex();
-    var pipeline = new AnalysisPipeline(acquirer, registry, symbolIndex);
-    var options = new AnalysisPipelineOptions(path);
-
-    var result = await pipeline.RunAsync(options).ConfigureAwait(false);
-
-    Console.WriteLine($"Analysis complete: {result.Findings.Length} finding(s) in {result.Duration.TotalMilliseconds:F0}ms");
-    Console.WriteLine($"  Rules executed: {result.RulesExecuted}");
-    Console.WriteLine($"  Syntax trees: {result.SyntaxTreesAnalyzed}");
-
-    // Emit SARIF
-    var scanTime = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
-    await SarifEmitter.WriteAsync(
-        result,
-        registry.GetAll().ToArray(),
-        scanTime,
-        output).ConfigureAwait(false);
-
-    Console.WriteLine($"SARIF report written to: {output}");
-
-    foreach (var finding in result.Findings)
-    {
-        Console.WriteLine($"  [{finding.Severity}] {finding.RuleId}: {finding.MessagePtBr}");
-        Console.WriteLine($"    at {finding.Location.FilePath}:{finding.Location.StartLine}:{finding.Location.StartColumn}");
-    }
-}, pathOption, outputOption);
-
-rootCommand.AddCommand(scanCommand);
-
-var versionCommand = new Command("version", "Display SmolerSAST version");
-versionCommand.SetHandler(() => Console.WriteLine("SmolerSAST v0.1.0"));
-rootCommand.AddCommand(versionCommand);
-
-return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
+    return sources;
+}

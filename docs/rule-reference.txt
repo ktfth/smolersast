@@ -1,0 +1,46 @@
+SmolerSAST v0.2.0 — 42 rules available
+
+ID         Severity   Precision  CWE          OWASP      Description
+----------------------------------------------------------------------------------------------------
+SMOL0001   Critical   Medium     89           A03:2021   Raw SQL string concatenation detected in SqlComman
+SMOL0002   High       Medium     89           A03:2021   FormattableString.Invariant() used to build SQL de
+SMOL0003   High       Medium     90           A03:2021   LDAP injection detected. String concatenation used
+SMOL0004   High       Medium     643          A03:2021   XPath injection detected. String concatenation pas
+SMOL0005   Critical   Medium     78           A03:2021   Command injection detected. Non-literal string in 
+SMOL0006   High       Medium     89           A03:2021   SQL injection via LINQ-to-SQL detected. String con
+SMOL0007   High       Medium     943          A03:2021   NoSQL injection detected. String concatenation use
+SMOL0008   Critical   Medium     89           A03:2021   SQL injection via Dapper detected. String concaten
+SMOL0009   Critical   High       502          A08:2021   BinaryFormatter usage detected. BinaryFormatter is
+SMOL0010   Critical   High       502          A08:2021   NetDataContractSerializer or SoapFormatter usage d
+SMOL0011   Critical   High       502          A08:2021   LosFormatter or ObjectStateFormatter usage detecte
+SMOL0012   Critical   High       642          A08:2021   ViewState MAC validation disabled. Disabling Enabl
+SMOL0013   Critical   High       502          A08:2021   Newtonsoft.Json TypeNameHandling set to a value ot
+SMOL0014   High       Medium     502          A08:2021   Custom JsonConverter calling JsonSerializer.Deseri
+SMOL0015   High       Medium     502          A08:2021   Untyped YamlDotNet deserialization detected. Using
+SMOL0016   High       Medium     502          A08:2021   DataContractSerializer with KnownTypes from dynami
+SMOL0017   High       High       328          A02:2021   Weak hash algorithm (MD5/SHA1) usage detected. MD5
+SMOL0018   High       High       327          A02:2021   ECB cipher mode usage detected. ECB encrypts ident
+SMOL0019   Critical   Medium     321          A02:2021   Hardcoded cryptographic key or IV detected in sour
+SMOL0020   Medium     High       327          A02:2021   RijndaelManaged usage detected. RijndaelManaged is
+SMOL0021   Medium     High       780          A02:2021   RSAEncryptionPadding.Pkcs1 usage detected. PKCS#1 
+SMOL0022   High       Medium     338          A02:2021   System.Random used in security context detected. S
+SMOL0023   Medium     Low        327          A02:2021   Possible custom cryptographic implementation detec
+SMOL0024   High       High       327          A02:2021   Weak TLS version (TLS 1.0/1.1) usage detected. TLS
+SMOL0025   High       Medium     862          A01:2021   [AllowAnonymous] detected on endpoint with sensiti
+SMOL0026   High       Medium     352          A01:2021   POST endpoint missing [ValidateAntiForgeryToken]. 
+SMOL0027   Critical   High       642          A08:2021   EnableViewStateMac disabled in code. ViewState wit
+SMOL0028   Medium     Medium     215          A05:2021   Debug or Trace enabled in code. Sensitive informat
+SMOL0029   Medium     Medium     209          A05:2021   CustomErrors disabled. Stack traces and error deta
+SMOL0030   Medium     Medium     614          A05:2021   Cookie configured without security flags (Secure, 
+SMOL0031   High       Low        287          A07:2021   AddAuthentication() called without scheme configur
+SMOL0032   Medium     Low        312          A04:2021   Value stored in IDistributedCache without encrypti
+SMOL0033   Critical   Medium     798          A07:2021   Hardcoded secret detected in source code. Credenti
+SMOL0036   Critical   High       295          A07:2021   TLS certificate validation disabled. ServerCertifi
+SMOL0038   High       Low        664          A04:2021   Possible DI lifetime mismatch: Scoped service may 
+SMOL0040   High       Medium     470          A03:2021   Dynamic reflection-based invocation detected. If t
+SMOL1001   High       Medium     532          A09:2021   PII detected in log statement. Violates LGPD Art. 
+SMOL1002   High       Medium     598          A04:2021   PII transmitted in URL query string. Personal data
+SMOL1006   Medium     Low        359          A01:2021   Property with PII name missing [PersonalData] anno
+SMOL1007   Critical   Medium     287          A07:2021   Incomplete JWT validation: ValidateAudience, Valid
+SMOL1009   High       Medium     321          A02:2021   Signing key loaded from file or configuration. Bac
+SMOL1012   High       Low        271          A01:2021   Privileged action without dual control evidence. C

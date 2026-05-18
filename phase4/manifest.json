@@ -1,0 +1,18 @@
+{
+  "scanStartTime": "2026-05-18T22:55:59.8788901Z",
+  "toolName": "SmolerSAST",
+  "toolVersion": "0.2.0",
+  "runtime": "Microsoft Windows NT 10.0.26200.0 / .NET 9.0.12",
+  "artifacts": [
+    {
+      "path": "phase4/scan-results.sarif",
+      "sha256": "b212da3ae2a5f565c51ed545bb3b42c7a85939bf457a518d3cc39d4b68a1462d",
+      "sizeBytes": 52509
+    },
+    {
+      "path": "phase4/scan-results.md",
+      "sha256": "e045bed6eab2b667fae51f94935d879a1a4048faf507b18dfcd4c59930069d91",
+      "sizeBytes": 1931
+    }
+  ]
+}
