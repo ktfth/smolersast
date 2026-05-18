@@ -5,6 +5,9 @@
     <Description>SmolerSAST Brazil-specific rule pack — LGPD, Bacen 4.658, CVM, Open Finance (SMOL1001-SMOL1012).</Description>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SmolerSAST.Core\SmolerSAST.Core.csproj" />
   </ItemGroup>
 </Project>

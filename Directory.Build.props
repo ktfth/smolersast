@@ -13,7 +13,7 @@
 
   <!-- NuGet package metadata -->
   <PropertyGroup>
-    <Version>0.1.0-alpha.1</Version>
+    <Version>0.2.0</Version>
     <Authors>SmolerSAST</Authors>
     <Company>SmolerSAST</Company>
     <Copyright>Copyright (c) 2026 SmolerSAST</Copyright>
