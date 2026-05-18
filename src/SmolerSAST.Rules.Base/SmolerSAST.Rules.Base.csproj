@@ -1,8 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <PackageId>SmolerSAST.Rules.Base</PackageId>
     <RootNamespace>SmolerSAST.Rules.Base</RootNamespace>
-    <Description>SmolerSAST base rule pack — .NET-specific security rules (SMOL0001-SMOL0040).</Description>
+    <Description>SmolerSAST base rule pack — .NET-specific security rules for deserialization, injection, cryptography, ASP.NET, and configuration vulnerabilities.</Description>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmolerSAST.Core\SmolerSAST.Core.csproj" />
   </ItemGroup>

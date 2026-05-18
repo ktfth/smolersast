@@ -1,10 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <PackageId>SmolerSAST</PackageId>
     <RootNamespace>SmolerSAST.Cli</RootNamespace>
-    <Description>SmolerSAST CLI — scan, rules, verify, report commands. NativeAOT-compatible.</Description>
+    <Description>SmolerSAST CLI — static application security testing for .NET. Roslyn-based symbol-aware vulnerability detection.</Description>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>smolersast</ToolCommandName>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.CommandLine" />
     <ProjectReference Include="..\SmolerSAST.Core\SmolerSAST.Core.csproj" />

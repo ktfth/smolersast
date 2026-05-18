@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <IsPackable>false</IsPackable>
     <RootNamespace>SmolerSAST.Rules.BR</RootNamespace>
     <Description>SmolerSAST Brazil-specific rule pack — LGPD, Bacen 4.658, CVM, Open Finance (SMOL1001-SMOL1012).</Description>
   </PropertyGroup>

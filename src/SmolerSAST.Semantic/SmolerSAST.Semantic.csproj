@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <IsPackable>false</IsPackable>
     <RootNamespace>SmolerSAST.Semantic</RootNamespace>
     <Description>SmolerSAST Claude-powered semantic exploitation analysis layer.</Description>
   </PropertyGroup>

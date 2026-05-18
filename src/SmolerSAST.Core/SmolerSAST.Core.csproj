@@ -1,8 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <PackageId>SmolerSAST.Core</PackageId>
     <RootNamespace>SmolerSAST.Core</RootNamespace>
-    <Description>SmolerSAST analysis engine — Roslyn-based compilation acquisition, symbol indexing, rule framework, and analysis pipeline.</Description>
+    <Description>SmolerSAST analysis engine — Roslyn-based compilation acquisition, symbol indexing, rule framework, and analysis pipeline for .NET security scanning.</Description>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
     <PackageReference Include="Microsoft.Build.Locator" />

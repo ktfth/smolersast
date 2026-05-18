@@ -10,4 +10,18 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>SmolerSAST</Authors>
+    <Company>SmolerSAST</Company>
+    <Copyright>Copyright (c) 2026 SmolerSAST</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/smolersast/smolersast</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/smolersast/smolersast</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>sast;security;dotnet;roslyn;static-analysis;cwe;owasp;lgpd;bacen</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
 </Project>
