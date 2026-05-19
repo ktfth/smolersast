@@ -8,7 +8,11 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <Nullable>enable</Nullable>
     <NoWarn>RS2008</NoWarn>
+    <PackageId>SmolerSAST.Analyzer</PackageId>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
   </ItemGroup>

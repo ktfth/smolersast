@@ -55,8 +55,12 @@ Toda regra é uma sealed class que herda `SmolerRule`:
 
 ## Fase Atual
 
-Phase 1 concluída. Phase 2 pendente: 39 regras restantes + taint engine.
-Consultar `phase1/phase-1-report.md` e `assets/smolersast-master-prompt.md` para contexto completo.
+Todas as 5 fases concluídas. 42 regras implementadas, 167 testes, 6 pacotes NuGet publicados.
+- Regras: `src/SmolerSAST.Rules.Base/` (36) e `src/SmolerSAST.Rules.BR/` (6)
+- CLI: `src/SmolerSAST.Cli/` (scan, rules, verify, report, version)
+- Analyzer IDE: `src/SmolerSAST.Analyzer/` (BinaryFormatter + WeakHash)
+- Docs: `docs/` (CI/CD guides), `README.md`
+- Para adicionar regras, registrar em `src/SmolerSAST.Cli/RuleRegistration.cs`
 
 ## Padrões de Teste
 

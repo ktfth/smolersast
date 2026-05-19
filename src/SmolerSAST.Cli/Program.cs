@@ -5,7 +5,7 @@ using SmolerSAST.Core.Indexing;
 using SmolerSAST.Core.Pipeline;
 using SmolerSAST.Reporting;
 
-const string Version = "0.2.0";
+const string Version = "0.3.0";
 
 var rootCommand = new RootCommand("SmolerSAST — Static Application Security Testing for .NET");
 
