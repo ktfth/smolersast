@@ -7,6 +7,7 @@ using SmolerSAST.Rules.Base.Injection;
 using SmolerSAST.Rules.BR.Bacen;
 using SmolerSAST.Rules.BR.Cvm;
 using SmolerSAST.Rules.BR.Lgpd;
+using SmolerSAST.Rules.BR.Pci;
 
 namespace SmolerSAST.Cli;
 
@@ -68,14 +69,33 @@ internal static class RuleRegistration
         // Brazil — LGPD (SMOL1001-1006)
         registry.Register(new PiiInLogStatementsRule());
         registry.Register(new PiiInUrlQueryStringRule());
+        registry.Register(new PiiInExceptionMessageRule());
+        registry.Register(new PiiInCacheWithoutEncryptionRule());
+        registry.Register(new PiiInCookieWithoutEncryptionRule());
         registry.Register(new PiiWithoutPersonalDataAnnotationRule());
 
-        // Brazil — Bacen (SMOL1007-1010)
+        // Brazil — Bacen (SMOL1007-1016)
         registry.Register(new JwtValidationIncompleteRule());
         registry.Register(new HsmNotUsedForSigningRule());
+        registry.Register(new MutualTlsNotEnforcedRule());
+        registry.Register(new AuditLogWithoutTamperProtectionRule());
+        registry.Register(new OAuthWithoutPkceRule());
+        registry.Register(new PixKeyExposureRule());
+        registry.Register(new SessionTimeoutExcessiveRule());
+        registry.Register(new FinancialOperationWithoutIdempotencyRule());
 
-        // Brazil — CVM (SMOL1011-1012)
+        // Brazil — PCI-DSS (SMOL1017-1021)
+        registry.Register(new PanInLogRule());
+        registry.Register(new CvvStorageRule());
+        registry.Register(new WeakCryptoForCardDataRule());
+        registry.Register(new CardDataWithoutTlsRule());
+        registry.Register(new AdminWithoutMfaRule());
+
+        // Brazil — CVM (SMOL1012-1024)
         registry.Register(new PrivilegedActionWithoutDualControlRule());
+        registry.Register(new MarketOperationWithoutAuditTrailRule());
+        registry.Register(new DataIntegrityWithoutValidationRule());
+        registry.Register(new RegulatoryReportWithoutDigitalSignatureRule());
 
         return registry;
     }
