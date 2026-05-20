@@ -55,10 +55,11 @@ Toda regra é uma sealed class que herda `SmolerRule`:
 
 ## Fase Atual
 
-Fases 1-5 concluídas + Fase 7 (regras BR expandidas). 58 regras implementadas, 258 testes, 6 pacotes NuGet publicados.
+Fases 1-5 + 7 + 8 concluídas. 59 regras implementadas, 258 testes, 6 pacotes NuGet publicados. v0.4.0.
 - Regras Base: `src/SmolerSAST.Rules.Base/` (36 regras .NET genéricas)
 - Regras BR: `src/SmolerSAST.Rules.BR/` (22 regras brasileiras — LGPD/Bacen/PCI-DSS/CVM)
-- CLI: `src/SmolerSAST.Cli/` (scan, rules, verify, report, version)
+- CLI: `src/SmolerSAST.Cli/` (scan, rules, verify, report, version, **baseline**, **policy**)
+- Policy: `src/SmolerSAST.Core/Policy/` (PolicyConfiguration, Baseline, PolicyEvaluator, InlineSuppression)
 - Analyzer IDE: `src/SmolerSAST.Analyzer/` (BinaryFormatter + WeakHash)
 - Docs: `docs/` (CI/CD guides, roadmap banco grande), `README.md`
 - Para adicionar regras, registrar em `src/SmolerSAST.Cli/RuleRegistration.cs`
