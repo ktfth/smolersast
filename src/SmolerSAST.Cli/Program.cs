@@ -14,17 +14,33 @@ var rootCommand = new RootCommand("SmolerSAST — Static Application Security Te
 var scanCommand = new Command("scan", "Scan a project or assembly for security vulnerabilities");
 var pathOption = new Option<string>("--path", "Path to directory with .cs files or a single .cs file") { IsRequired = true };
 var outputOption = new Option<string>("--output", () => "scan-results.sarif", "Output file path for the SARIF report");
-var formatOption = new Option<string>("--format", () => "sarif", "Output format: sarif, markdown, or both");
+var formatOption = new Option<string>("--format", () => "sarif", "Output format: sarif, markdown, html, or both (sarif+markdown)");
+var incrementalOption = new Option<string?>("--incremental", () => null, "Incremental scan: only analyze files changed since git ref (e.g., HEAD~1, main, origin/main)");
 scanCommand.AddOption(pathOption);
 scanCommand.AddOption(outputOption);
 scanCommand.AddOption(formatOption);
+scanCommand.AddOption(incrementalOption);
 
-scanCommand.SetHandler(async (string path, string output, string format) =>
+scanCommand.SetHandler(async (string path, string output, string format, string? incremental) =>
 {
     Console.WriteLine($"SmolerSAST v{Version} — Scanning: {path}");
 
     var registry = RuleRegistration.CreateRegistry();
-    var sources = await LoadSourcesAsync(path).ConfigureAwait(false);
+
+    List<string> sources;
+    if (incremental is not null && Directory.Exists(path))
+    {
+        var (incSources, isIncremental) = await IncrementalFileFilter.LoadSourcesAsync(path, incremental).ConfigureAwait(false);
+        sources = incSources;
+        if (isIncremental)
+        {
+            Console.WriteLine($"  Incremental scan: {sources.Count} changed file(s) since {incremental}");
+        }
+    }
+    else
+    {
+        sources = await LoadSourcesAsync(path).ConfigureAwait(false);
+    }
 
     if (sources.Count == 0)
     {
@@ -58,6 +74,14 @@ scanCommand.SetHandler(async (string path, string output, string format) =>
         await MarkdownReportEmitter.WriteAsync(result, rules, scanTime, path, mdPath).ConfigureAwait(false);
         Console.WriteLine($"  Markdown report: {mdPath}");
         artifacts.Add(mdPath);
+    }
+
+    if (format is "html")
+    {
+        var htmlPath = Path.ChangeExtension(output, ".html");
+        await HtmlDashboardEmitter.WriteAsync(result, rules, scanTime, path, htmlPath).ConfigureAwait(false);
+        Console.WriteLine($"  HTML dashboard: {htmlPath}");
+        artifacts.Add(htmlPath);
     }
 
     // Emit manifest
@@ -98,7 +122,7 @@ scanCommand.SetHandler(async (string path, string output, string format) =>
     }
 
     Environment.ExitCode = evaluation.ExitCode;
-}, pathOption, outputOption, formatOption);
+}, pathOption, outputOption, formatOption, incrementalOption);
 
 rootCommand.AddCommand(scanCommand);
 
