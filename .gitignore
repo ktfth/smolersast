@@ -49,6 +49,9 @@ coverage.cobertura.xml
 scan.sarif
 scan-results.sarif
 banking-scan.sarif
+demo-output/
+*.smolersast-baseline.json
+.smolersast.json
 
 ## Secrets / keys
 *.pfx

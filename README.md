@@ -3,268 +3,180 @@
 [![NuGet](https://img.shields.io/nuget/v/SmolerSAST?label=CLI)](https://www.nuget.org/packages/SmolerSAST)
 [![NuGet](https://img.shields.io/nuget/v/SmolerSAST.Core?label=Core)](https://www.nuget.org/packages/SmolerSAST.Core)
 
-Plataforma modular de análise estática de segurança (SAST) para codebases .NET, voltada ao mercado financeiro brasileiro.
+Plataforma de análise estática de segurança (SAST) para .NET, construída sobre **Roslyn SemanticModel** com **taint analysis** e regras específicas para o mercado financeiro brasileiro.
 
-Diferencial: detecção baseada em **Roslyn symbol resolution** (não regex), com regras específicas para LGPD, Bacen 4.658 e CVM.
+## Por que existe
 
-## Instalação
+Ferramentas comerciais (Fortify, Checkmarx, SonarQube) usam regex ou AST pattern matching — não resolvem tipos. Uma classe chamada `BinaryFormatter` num namespace customizado é flagrada igual ao `System.Runtime.Serialization`. Além disso, nenhuma delas tem regras nativas para LGPD, Bacen 4.658, PCI-DSS em contexto brasileiro, ou Open Finance Brasil.
 
-```bash
-# Como dotnet tool global
-dotnet tool install --global SmolerSAST
-
-# Como library no seu projeto
-dotnet add package SmolerSAST.Core
-dotnet add package SmolerSAST.Rules.Base
-dotnet add package SmolerSAST.Rules.BR
-```
+O SmolerSAST resolve isso com:
+- **Symbol resolution real** via Roslyn `SemanticModel` — sabe o tipo, namespace, e hierarquia
+- **Taint analysis intraprocedural** — rastreia dados de source (HttpRequest, DbReader) até sink (SqlCommand, Process.Start), com sanitizer modeling
+- **22 regras regulatórias brasileiras** — LGPD, Bacen, PCI-DSS, CVM com referência legal exata
+- **Policy-as-code** — quality gates, baseline, SLA por severidade, inline suppression
 
 ## Quick Start
 
 ```bash
-# Escanear código C#
-smolersast scan --path ./src --output report.sarif
+# Instalar
+dotnet tool install --global SmolerSAST
 
-# Gerar SARIF + relatório Markdown pt-BR
-smolersast scan --path ./src --output report.sarif --format both
+# Escanear
+smolersast scan --path ./src --output report.sarif --format html
 
-# Listar todas as 42 regras
+# Ver regras
 smolersast rules
 
-# Verificar integridade dos artefatos
-smolersast verify --manifest manifest.json
-
-# Versão e info
-smolersast version
+# Scan incremental (só arquivos alterados)
+smolersast scan --path ./src --output report.sarif --incremental origin/main
 ```
 
-### Exemplo de output
+## Demo: Banking Sample (31 findings)
 
-```
-SmolerSAST v0.3.0 — Scanning: ./src
-Analysis complete: 13 finding(s) in 5509ms
-  Rules executed: 42
-  Syntax trees: 4
-  SARIF report: report.sarif
-  Markdown report: report.md
-  [Critical] SMOL0009: Instanciação de BinaryFormatter detectada.
-  [Critical] SMOL0033: Segredo hardcoded em 'ApiKey'.
-  [High]     SMOL1001: PII (cpf) detectado em log statement. LGPD Art. 46.
-  ...
+```bash
+smolersast scan --path fixtures/banking-sample --format html
 ```
 
-## Pacotes NuGet
+Detecta em código bancário simulado:
+- **Taint-aware SQL injection** — input de `[FromQuery]` flui até `ExecuteNonQuery` com path completo
+- **PIX key em log** — Bacen Resolução 1/2020
+- **CVV armazenado em entity** — PCI-DSS Req. 3.2
+- **JWT sem validação** — Bacen Res. 4.658 / FAPI 1.0
+- **Session timeout > 15min** — Bacen Res. 4.658
+- **PAN sem mascaramento em log** — PCI-DSS Req. 3.4
 
-| Pacote | Descrição |
-|--------|-----------|
-| [SmolerSAST](https://www.nuget.org/packages/SmolerSAST) | CLI tool (`smolersast scan`, `rules`, `verify`) |
-| [SmolerSAST.Core](https://www.nuget.org/packages/SmolerSAST.Core) | Analysis engine (Roslyn pipeline, rule framework) |
-| [SmolerSAST.Rules.Base](https://www.nuget.org/packages/SmolerSAST.Rules.Base) | 36 regras .NET genéricas |
-| [SmolerSAST.Rules.BR](https://www.nuget.org/packages/SmolerSAST.Rules.BR) | 6 regras brasileiras (LGPD/Bacen/CVM) |
-| [SmolerSAST.Reporting](https://www.nuget.org/packages/SmolerSAST.Reporting) | SARIF 2.1.0 + Markdown emitter |
-| [SmolerSAST.Analyzer](https://www.nuget.org/packages/SmolerSAST.Analyzer) | Roslyn analyzer para IDE (VS/Rider) |
+Gera dashboard HTML interativo com Chart.js (severidade, top regras, filtros).
 
-## 42 Regras de Segurança
+## 61 Regras de Segurança
 
-### Injection (SMOL0001-0008)
+### Base .NET (38 regras)
 
-| ID | Descrição | CWE | Severidade |
-|----|-----------|-----|------------|
-| SMOL0001 | Raw SQL concatenation em SqlCommand | 89 | Critical |
-| SMOL0002 | FormattableString.Invariant em SQL | 89 | High |
-| SMOL0003 | LDAP injection em DirectoryEntry | 90 | High |
-| SMOL0004 | XPath injection em XmlDocument | 643 | High |
-| SMOL0005 | Command injection via Process.Start | 78 | Critical |
-| SMOL0006 | LINQ-to-SQL string composition | 89 | High |
-| SMOL0007 | NoSQL injection em MongoDB.Driver | 943 | High |
-| SMOL0008 | Dapper string parameter abuse | 89 | Critical |
+| Categoria | IDs | Exemplos |
+|-----------|-----|----------|
+| Injection | SMOL0001-0008 | SQL injection, command injection, LDAP, XPath, NoSQL |
+| Injection (Taint-Aware) | SMOL0041-0042 | SQL/command injection com data flow analysis |
+| Deserialization | SMOL0009-0016 | BinaryFormatter, Newtonsoft TypeNameHandling, YamlDotNet |
+| Cryptography | SMOL0017-0024 | MD5/SHA1, ECB mode, hardcoded keys, weak TLS |
+| ASP.NET | SMOL0025-0032 | CSRF, AllowAnonymous, insecure cookies |
+| Configuration | SMOL0033-0040 | Hardcoded secrets, cert validation bypass, DI mismatch |
 
-### Deserialization (SMOL0009-0016)
+### Brasil — Regulatório (22 regras)
 
-| ID | Descrição | CWE | Severidade |
-|----|-----------|-----|------------|
-| SMOL0009 | BinaryFormatter usage | 502 | Critical |
-| SMOL0010 | NetDataContractSerializer / SoapFormatter | 502 | Critical |
-| SMOL0011 | LosFormatter / ObjectStateFormatter | 502 | Critical |
-| SMOL0012 | ViewState MAC validation disabled | 642 | Critical |
-| SMOL0013 | Newtonsoft.Json TypeNameHandling != None | 502 | Critical |
-| SMOL0014 | Unsafe JsonConverter com tipo dinâmico | 502 | High |
-| SMOL0015 | YamlDotNet untyped deserialization | 502 | High |
-| SMOL0016 | DataContractSerializer com KnownTypes dinâmico | 502 | High |
+| Regulação | IDs | Exemplos |
+|-----------|-----|----------|
+| LGPD | SMOL1001-1006 | PII em log, exception, cache, cookie, URL, sem anotação |
+| Bacen | SMOL1007-1016 | JWT, HSM, mTLS, audit tamper, PKCE, PIX key, session, idempotency |
+| PCI-DSS | SMOL1017-1021 | PAN em log, CVV storage, weak crypto cards, TLS, MFA admin |
+| CVM | SMOL1012-1024 | Dual control, audit trail, data integrity, digital signature |
 
-### Cryptography (SMOL0017-0024)
+## Taint Analysis Engine
 
-| ID | Descrição | CWE | Severidade |
-|----|-----------|-----|------------|
-| SMOL0017 | MD5/SHA1 para hashing | 328 | High |
-| SMOL0018 | ECB cipher mode | 327 | High |
-| SMOL0019 | Chave/IV hardcoded | 321 | Critical |
-| SMOL0020 | RijndaelManaged (deprecated) | 327 | Medium |
-| SMOL0021 | RSA com PKCS#1 v1.5 padding | 780 | Medium |
-| SMOL0022 | System.Random em contexto de segurança | 338 | High |
-| SMOL0023 | Implementação crypto customizada | 327 | Medium |
-| SMOL0024 | TLS 1.0/1.1 explícito | 327 | High |
+Rastreia dados de fontes inseguras até sinks perigosos:
 
-### ASP.NET (SMOL0025-0032)
+```
+[FromQuery] string input  →  string sql = "..." + input  →  cmd.CommandText = sql  →  cmd.ExecuteNonQuery()
+     SOURCE                    PROPAGATION                    ASSIGNMENT               SINK (flagged!)
+```
 
-| ID | Descrição | CWE | Severidade |
-|----|-----------|-----|------------|
-| SMOL0025 | [AllowAnonymous] em verbo sensível | 862 | High |
-| SMOL0026 | POST sem [ValidateAntiForgeryToken] | 352 | High |
-| SMOL0027 | EnableViewStateMac = false | 642 | Critical |
-| SMOL0028 | Debug/Trace habilitado | 215 | Medium |
-| SMOL0029 | UseDeveloperExceptionPage sem env check | 209 | Medium |
-| SMOL0030 | Cookie sem Secure/HttpOnly | 614 | Medium |
-| SMOL0031 | AddAuthentication sem esquema | 287 | High |
-| SMOL0032 | IDistributedCache sem cifragem | 312 | Medium |
+- **Sources:** HttpRequest params, File.Read, DbReader, IConfiguration
+- **Sinks:** SqlCommand.Execute*, Process.Start, Response.Write, Redirect
+- **Sanitizers:** HtmlEncode, int.Parse, SqlParameter.AddWithValue, Validate
+- **Confidence:** 0.95 (direct) → 0.75 (long paths)
 
-### Configuration & Secrets (SMOL0033-0040)
+Se o dado passa por sanitizer, o taint morre e o finding não é gerado.
 
-| ID | Descrição | CWE | Severidade |
-|----|-----------|-----|------------|
-| SMOL0033 | Segredo hardcoded no código | 798 | Critical |
-| SMOL0036 | HttpClient sem validação de certificado TLS | 295 | Critical |
-| SMOL0038 | DI lifetime mismatch (Scoped em Singleton) | 664 | High |
-| SMOL0040 | Invocação dinâmica via reflection | 470 | High |
+## Policy-as-Code
 
-### Brasil — LGPD (SMOL1001-1006)
+```bash
+# Inicializar política
+smolersast policy --action init
 
-| ID | Descrição | CWE | Ref. Legal |
-|----|-----------|-----|------------|
-| SMOL1001 | PII (CPF/CNPJ/RG) em log statements | 532 | LGPD Art. 46 |
-| SMOL1002 | PII em query string de URL | 598 | LGPD Art. 46 |
-| SMOL1006 | PII sem anotação [PersonalData] | 359 | LGPD Art. 5 |
+# Criar baseline de findings aceitos
+smolersast baseline --path ./src --action create --by "appsec@banco.com"
 
-### Brasil — Bacen / CVM (SMOL1007-1012)
+# Scan mostra apenas findings NOVOS vs baseline
+smolersast scan --path ./src --output report.sarif
+```
 
-| ID | Descrição | CWE | Ref. Legal |
-|----|-----------|-----|------------|
-| SMOL1007 | JWT sem validação audience/issuer/lifetime | 287 | Bacen Res. 4.658 / FAPI 1.0 |
-| SMOL1009 | Chave de assinatura sem HSM/KMS | 321 | Bacen Res. 4.658 Art. 3 |
-| SMOL1012 | Ação privilegiada sem controle dual | 271 | CVM Res. 35 |
+`.smolersast.json`:
+```json
+{
+  "qualityGates": {
+    "failOn": { "critical": 0, "high": 5, "medium": -1 },
+    "blockMerge": true
+  },
+  "severitySla": {
+    "criticalHours": 48,
+    "highHours": 168
+  }
+}
+```
+
+## Integração Enterprise
+
+| Plataforma | Tipo | Docs |
+|------------|------|------|
+| GitHub Actions | CI/CD + SARIF upload | [docs/github-actions.md](docs/github-actions.md) |
+| Azure DevOps | Pipeline YAML | [docs/azure-devops.md](docs/azure-devops.md) |
+| Jenkins | Warnings Next Gen | [docs/jenkins.md](docs/jenkins.md) |
+| SonarQube | External issues via SARIF | [docs/sonarqube-integration.md](docs/sonarqube-integration.md) |
+| DefectDojo | REST API upload | [docs/defectdojo-integration.md](docs/defectdojo-integration.md) |
 
 ## Arquitetura
 
 ```
-                    ┌──────────────────────┐
-                    │   SmolerSAST.Cli     │  ← scan, rules, verify, report, version
-                    └──────────┬───────────┘
-                               │
-                    ┌──────────▼───────────┐
-                    │  AnalysisPipeline     │  ← Orquestrador paralelo
-                    └──────────┬───────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                │
-   ┌──────────▼──────┐ ┌──────▼──────┐ ┌───────▼───────┐
-   │ Compilation     │ │ Symbol      │ │ Rule          │
-   │ Acquirer        │ │ Index       │ │ Registry (42) │
-   └─────────────────┘ └─────────────┘ └───────┬───────┘
-                                                │
-                              ┌─────────────────┼─────────────────┐
-                              │                 │                 │
-                    ┌─────────▼───┐   ┌─────────▼───┐   ┌────────▼────┐
-                    │ Rules.Base  │   │ Rules.BR    │   │ Analyzer   │
-                    │ 36 regras   │   │ 6 regras    │   │ IDE NuGet  │
-                    └─────────────┘   └─────────────┘   └─────────────┘
-                                                │
-                                     ┌──────────▼──────────┐
-                                     │ SARIF + Markdown     │
-                                     │ + Manifest SHA-256   │
-                                     └─────────────────────┘
-```
-
-## Estrutura do Projeto
-
-```
-src/
-├── SmolerSAST.Core/              # Motor de análise (Roslyn)
-│   ├── Compilation/              #   Aquisição de compilação
-│   ├── Indexing/                 #   Indexação de símbolos
-│   ├── Pipeline/                 #   Orquestrador do pipeline
-│   └── Rules/                    #   Framework (SmolerRule, Finding, RuleId)
-├── SmolerSAST.Rules.Base/       # 36 regras .NET
-│   ├── Injection/                #   SMOL0001-0008
-│   ├── Deserialization/          #   SMOL0009-0016
-│   ├── Cryptography/             #   SMOL0017-0024
-│   ├── AspNet/                   #   SMOL0025-0032
-│   └── Configuration/            #   SMOL0033-0040
-├── SmolerSAST.Rules.BR/         # 6 regras brasileiras
-│   ├── Lgpd/                     #   SMOL1001-1006
-│   ├── Bacen/                    #   SMOL1007-1010
-│   └── Cvm/                      #   SMOL1011-1012
-├── SmolerSAST.Reporting/        # SARIF 2.1.0 + Markdown + Manifest
-├── SmolerSAST.Cli/              # CLI (scan, rules, verify, report, version)
-└── SmolerSAST.Analyzer/         # Roslyn Analyzer NuGet (IDE squigglies)
-
-tests/
-├── SmolerSAST.Core.Tests/           # 34 testes core
-├── SmolerSAST.Rules.Base.Tests/     # 126 testes de regras
-└── SmolerSAST.Integration.Tests/    # 7 testes (determinismo + performance)
-
-fixtures/
-├── cli-scan-sample/             # Exemplo simples (5 findings)
-└── banking-sample/              # Cenário bancário (13 findings)
-
-docs/
-├── github-actions.md            # Guia CI/CD GitHub Actions
-├── azure-devops.md              # Guia CI/CD Azure DevOps
-├── jenkins.md                   # Guia CI/CD Jenkins
-└── rule-reference.txt           # Referência completa de regras
-```
-
-## Integração CI/CD
-
-Guias prontos para:
-- [GitHub Actions](docs/github-actions.md) — com upload SARIF para GitHub Security
-- [Azure DevOps](docs/azure-devops.md) — pipeline YAML com artifacts
-- [Jenkins](docs/jenkins.md) — Jenkinsfile com Warnings Next Generation
-
-## Criando uma Nova Regra
-
-```csharp
-public sealed class MyRule : SmolerRule
-{
-    public override RuleId Id { get; } = new("SMOL0042");
-    public override ImmutableArray<int> CweIds { get; } = [79];
-    public override string OwaspCategory => "A03:2021";
-    public override RuleSeverity Severity => RuleSeverity.High;
-    public override RulePrecision Precision => RulePrecision.Medium;
-    public override ImmutableArray<string> Tags { get; } = ["xss"];
-    public override string DescriptionPtBr => "XSS detectado...";
-    public override string DescriptionEnUs => "XSS detected...";
-    public override string RemediationGuidancePtBr => "Sanitize output...";
-
-    public override void RegisterActions(AnalysisContext context)
-    {
-        context.RegisterSyntaxNodeAction(Analyze, SyntaxKind.InvocationExpression);
-    }
-
-    private static void Analyze(SyntaxNodeAnalysisContext ctx)
-    {
-        // Usar ctx.SemanticModel para symbol resolution — NUNCA regex
-    }
-}
-```
-
-## Desenvolvimento
-
-```bash
-dotnet restore                    # Restaurar dependências
-dotnet build -c Release           # Compilar (zero warnings)
-dotnet test -c Release            # 167 testes
-smolersast scan --path fixtures/banking-sample  # Testar
+                    ┌──────────────────────────────────────┐
+                    │         SmolerSAST.Cli v0.4.0        │
+                    │  scan, rules, verify, baseline,      │
+                    │  policy, report, version             │
+                    └──────────────────┬───────────────────┘
+                                       │
+              ┌────────────────────────┼────────────────────────┐
+              │                        │                        │
+   ┌──────────▼──────┐     ┌──────────▼──────────┐  ┌──────────▼──────┐
+   │  Compilation    │     │  Taint Engine       │  │  Policy Engine  │
+   │  Acquirer       │     │  Source → Sink      │  │  Quality Gates  │
+   │  (Roslyn)       │     │  + Sanitizer Model  │  │  + Baseline     │
+   └─────────────────┘     └─────────────────────┘  └─────────────────┘
+              │                        │
+   ┌──────────▼──────────────────────────────────────────────────┐
+   │                    Rule Registry (61)                         │
+   ├─────────────────┬─────────────────┬─────────────────────────┤
+   │ Rules.Base (38) │ Rules.BR (22)   │ Taint-Aware (2)         │
+   │ Injection       │ LGPD            │ SQL Injection            │
+   │ Deserialization │ Bacen           │ Command Injection        │
+   │ Cryptography    │ PCI-DSS         │                         │
+   │ ASP.NET         │ CVM             │                         │
+   │ Configuration   │                 │                         │
+   └─────────────────┴─────────────────┴─────────────────────────┘
+                                       │
+                    ┌──────────────────▼───────────────────┐
+                    │           Reporting                   │
+                    │  SARIF 2.1.0 │ Markdown │ HTML       │
+                    │  + Manifest SHA-256                   │
+                    └──────────────────────────────────────┘
 ```
 
 ## Princípios de Design
 
-- **Symbol resolution, não regex** — toda detecção usa `SemanticModel` do Roslyn
-- **Regras stateless** — nenhum estado mutável em instâncias de `SmolerRule`
-- **False positive rate como métrica** — cada regra declara sua precisão
-- **Determinismo** — mesmo input = mesmo output (verificado por testes)
-- **Imutabilidade** — `Finding`, `FindingLocation`, `RuleId` são records imutáveis
+- **Symbol resolution, não regex** — toda detecção usa Roslyn `SemanticModel`
+- **Taint-aware** — data flow tracking de source a sink com sanitizer modeling
+- **Regras stateless** — sealed classes, nenhum campo mutável, thread-safe
+- **Precision declarada** — cada regra declara High/Medium/Low precision (taxa de FP)
+- **Determinismo** — mesmo input = mesmo output (testes de determinismo)
+- **Imutabilidade** — Finding, FindingLocation, RuleId são records imutáveis
 - **Zero warnings** — build com `TreatWarningsAsErrors=true`
 - **Bilíngue** — mensagens pt-BR (primário) e en-US (secundário)
+- **271 testes** — unitários, integração, determinismo
+
+## Desenvolvimento
+
+```bash
+dotnet restore
+dotnet build -c Release           # Zero warnings
+dotnet test -c Release            # 271 testes
+smolersast scan --path fixtures/banking-sample --format html
+```
 
 ## Licença
 
