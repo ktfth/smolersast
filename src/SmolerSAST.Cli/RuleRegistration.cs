@@ -30,6 +30,10 @@ internal static class RuleRegistration
         registry.Register(new NoSqlInjectionRule());
         registry.Register(new DapperSqlInjectionRule());
 
+        // Taint-aware injection (SMOL0041-0042)
+        registry.Register(new TaintAwareSqlInjectionRule());
+        registry.Register(new TaintAwareCommandInjectionRule());
+
         // Deserialization (SMOL0009-0016)
         registry.Register(new BinaryFormatterUsageRule());
         registry.Register(new NetDataContractSerializerSoapFormatterRule());
